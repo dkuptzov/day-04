@@ -21,7 +21,6 @@ UNAME=$(shell uname -s)
 #	TEST_FLAGS=-lcheck
 #endif
 
-
 all: clean s21_matrix.a
 
 matrix_test: $(GREP)
