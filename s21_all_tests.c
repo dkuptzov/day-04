@@ -23,7 +23,7 @@ START_TEST(test_0)
     A.matrix[1][0] = 1;
     A.matrix[1][1] = 1;
     ck_assert_int_eq(x, A.matrix[0][0]);
-    free_mem_matrix(&A);
+    s21_remove_matrix(&A);
 }
 
 START_TEST(test_1)
@@ -54,8 +54,8 @@ START_TEST(test_2)
     B.matrix[1][0] = 3;
     B.matrix[1][1] = 4;
     ck_assert_int_eq(1, s21_eq_matrix(&A, &B));
-    free_mem_matrix(&A);
-    free_mem_matrix(&B);
+    s21_remove_matrix(&A);
+    s21_remove_matrix(&B);
 }
 
 START_TEST(test_3)
@@ -73,8 +73,8 @@ START_TEST(test_3)
     B.matrix[1][0] = 3.345678901;
     B.matrix[1][1] = 4.456789012;
     ck_assert_int_eq(1, s21_eq_matrix(&A, &B));
-    free_mem_matrix(&A);
-    free_mem_matrix(&B);
+    s21_remove_matrix(&A);
+    s21_remove_matrix(&B);
 }
 
 START_TEST(test_4)
@@ -92,8 +92,8 @@ START_TEST(test_4)
     B.matrix[1][0] = 33333333333.345678901;
     B.matrix[1][1] = 44444444444.456789012;
     ck_assert_int_eq(1, s21_eq_matrix(&A, &B));
-    free_mem_matrix(&A);
-    free_mem_matrix(&B);
+    s21_remove_matrix(&A);
+    s21_remove_matrix(&B);
 }
 
 START_TEST(test_5)
@@ -111,8 +111,8 @@ START_TEST(test_5)
     B.matrix[1][0] = 33333333333.345678901;
     B.matrix[1][1] = 44444444444.556789012;
     ck_assert_int_eq(0, s21_eq_matrix(&A, &B));
-    free_mem_matrix(&A);
-    free_mem_matrix(&B);
+    s21_remove_matrix(&A);
+    s21_remove_matrix(&B);
 }
 
 START_TEST(test_6)
@@ -130,8 +130,8 @@ START_TEST(test_6)
     B.matrix[1][0] = 0.345678901;
     B.matrix[1][1] = 0.556789012;
     ck_assert_int_eq(0, s21_eq_matrix(&A, &B));
-    free_mem_matrix(&A);
-    free_mem_matrix(&B);
+    s21_remove_matrix(&A);
+    s21_remove_matrix(&B);
 }
 
 START_TEST(test_7)
@@ -149,8 +149,8 @@ START_TEST(test_7)
     B.matrix[1][0] = 0.000001;
     B.matrix[1][1] = 0.000001;
     ck_assert_int_eq(0, s21_eq_matrix(&A, &B));
-    free_mem_matrix(&A);
-    free_mem_matrix(&B);
+    s21_remove_matrix(&A);
+    s21_remove_matrix(&B);
 }
 
 START_TEST(test_8)
@@ -175,10 +175,10 @@ START_TEST(test_8)
     C.matrix[1][1] = 2;
     s21_sum_matrix(&A, &B, &RESULT);
     ck_assert_int_eq(1, s21_eq_matrix(&C, &RESULT));
-    free_mem_matrix(&A);
-    free_mem_matrix(&B);
-    free_mem_matrix(&C);
-    free_mem_matrix(&RESULT);
+    s21_remove_matrix(&A);
+    s21_remove_matrix(&B);
+    s21_remove_matrix(&C);
+    s21_remove_matrix(&RESULT);
 }
 
 START_TEST(test_9)
@@ -203,10 +203,10 @@ START_TEST(test_9)
     C.matrix[1][1] = 888.888;
     s21_sum_matrix(&A, &B, &RESULT);
     ck_assert_int_eq(1, s21_eq_matrix(&C, &RESULT));
-    free_mem_matrix(&A);
-    free_mem_matrix(&B);
-    free_mem_matrix(&C);
-    free_mem_matrix(&RESULT);
+    s21_remove_matrix(&A);
+    s21_remove_matrix(&B);
+    s21_remove_matrix(&C);
+    s21_remove_matrix(&RESULT);
 }
 
 START_TEST(test_10)
@@ -231,10 +231,10 @@ START_TEST(test_10)
     C.matrix[1][1] = 889.889998;
     s21_sum_matrix(&A, &B, &RESULT);
     ck_assert_int_eq(1, s21_eq_matrix(&C, &RESULT));
-    free_mem_matrix(&A);
-    free_mem_matrix(&B);
-    free_mem_matrix(&C);
-    free_mem_matrix(&RESULT);
+    s21_remove_matrix(&A);
+    s21_remove_matrix(&B);
+    s21_remove_matrix(&C);
+    s21_remove_matrix(&RESULT);
 }
 
 START_TEST(test_11)
@@ -259,10 +259,10 @@ START_TEST(test_11)
     C.matrix[1][1] = 0.34564485634;
     s21_sum_matrix(&A, &B, &RESULT);
     ck_assert_int_eq(1, s21_eq_matrix(&C, &RESULT));
-    free_mem_matrix(&A);
-    free_mem_matrix(&B);
-    free_mem_matrix(&C);
-    free_mem_matrix(&RESULT);
+    s21_remove_matrix(&A);
+    s21_remove_matrix(&B);
+    s21_remove_matrix(&C);
+    s21_remove_matrix(&RESULT);
 }
 
 START_TEST(test_12)
@@ -287,10 +287,10 @@ START_TEST(test_12)
     C.matrix[1][1] = 1;
     s21_sub_matrix(&A, &B, &RESULT);
     ck_assert_int_eq(1, s21_eq_matrix(&C, &RESULT));
-    free_mem_matrix(&A);
-    free_mem_matrix(&B);
-    free_mem_matrix(&C);
-    free_mem_matrix(&RESULT);
+    s21_remove_matrix(&A);
+    s21_remove_matrix(&B);
+    s21_remove_matrix(&C);
+    s21_remove_matrix(&RESULT);
 }
 
 START_TEST(test_13)
@@ -315,10 +315,10 @@ START_TEST(test_13)
     C.matrix[1][1] = 1;
     s21_sub_matrix(&A, &B, &RESULT);
     ck_assert_int_eq(1, s21_eq_matrix(&C, &RESULT));
-    free_mem_matrix(&A);
-    free_mem_matrix(&B);
-    free_mem_matrix(&C);
-    free_mem_matrix(&RESULT);
+    s21_remove_matrix(&A);
+    s21_remove_matrix(&B);
+    s21_remove_matrix(&C);
+    s21_remove_matrix(&RESULT);
 }
 
 START_TEST(test_14)
@@ -338,9 +338,9 @@ START_TEST(test_14)
     C.matrix[1][1] = 5;
     s21_mult_number(&A, 5, &RESULT);
     ck_assert_int_eq(1, s21_eq_matrix(&C, &RESULT));
-    free_mem_matrix(&A);
-    free_mem_matrix(&C);
-    free_mem_matrix(&RESULT);
+    s21_remove_matrix(&A);
+    s21_remove_matrix(&C);
+    s21_remove_matrix(&RESULT);
 }
 
 START_TEST(test_15)
@@ -360,9 +360,9 @@ START_TEST(test_15)
     C.matrix[1][1] = 5.123;
     s21_mult_number(&A, 5.123, &RESULT);
     ck_assert_int_eq(1, s21_eq_matrix(&C, &RESULT));
-    free_mem_matrix(&A);
-    free_mem_matrix(&C);
-    free_mem_matrix(&RESULT);
+    s21_remove_matrix(&A);
+    s21_remove_matrix(&C);
+    s21_remove_matrix(&RESULT);
 }
 
 START_TEST(test_16)
@@ -391,10 +391,10 @@ START_TEST(test_16)
     C.matrix[1][1] = 55;
     s21_mult_matrix(&A, &B, &RESULT);
     ck_assert_int_eq(1, s21_eq_matrix(&C, &RESULT));
-    free_mem_matrix(&A);
-    free_mem_matrix(&B);
-    free_mem_matrix(&C);
-    free_mem_matrix(&RESULT);
+    s21_remove_matrix(&A);
+    s21_remove_matrix(&B);
+    s21_remove_matrix(&C);
+    s21_remove_matrix(&RESULT);
 }
 
 START_TEST(test_17)
@@ -423,10 +423,10 @@ START_TEST(test_17)
     C.matrix[1][1] = 15;
     s21_mult_matrix(&A, &B, &RESULT);
     ck_assert_int_eq(1, s21_eq_matrix(&C, &RESULT));
-    free_mem_matrix(&A);
-    free_mem_matrix(&B);
-    free_mem_matrix(&C);
-    free_mem_matrix(&RESULT);
+    s21_remove_matrix(&A);
+    s21_remove_matrix(&B);
+    s21_remove_matrix(&C);
+    s21_remove_matrix(&RESULT);
 }
 
 START_TEST(test_18)
@@ -463,10 +463,10 @@ START_TEST(test_18)
     C.matrix[3][3] = 2;
     s21_mult_matrix(&A, &B, &RESULT);
     ck_assert_int_eq(1, s21_eq_matrix(&C, &RESULT));
-    free_mem_matrix(&A);
-    free_mem_matrix(&B);
-    free_mem_matrix(&C);
-    free_mem_matrix(&RESULT);
+    s21_remove_matrix(&A);
+    s21_remove_matrix(&B);
+    s21_remove_matrix(&C);
+    s21_remove_matrix(&RESULT);
 }
 
 START_TEST(test_19)
@@ -486,8 +486,8 @@ START_TEST(test_19)
     B.matrix[1][1] = 4;
     s21_transpose(&A, &RESULT);
     ck_assert_int_eq(1, s21_eq_matrix(&B, &RESULT));
-    free_mem_matrix(&A);
-    free_mem_matrix(&B);
+    s21_remove_matrix(&A);
+    s21_remove_matrix(&B);
 }
 
 START_TEST(test_20)
@@ -517,8 +517,187 @@ START_TEST(test_20)
     B.matrix[2][2] = 9;
     s21_transpose(&A, &RESULT);
     ck_assert_int_eq(1, s21_eq_matrix(&B, &RESULT));
-    free_mem_matrix(&A);
-    free_mem_matrix(&B);
+    s21_remove_matrix(&A);
+    s21_remove_matrix(&B);
+}
+
+START_TEST(test_21)
+{
+    // Определитель матрицы 1
+    matrix_t A;
+    double result;
+    s21_create_matrix(5, 5, &A);
+    A.matrix[0][0] = 0;
+    A.matrix[0][1] = -3;
+    A.matrix[0][2] = -5;
+    A.matrix[0][3] = 8;
+    A.matrix[0][4] = 1;
+    A.matrix[1][0] = -3;
+    A.matrix[1][1] = 2;
+    A.matrix[1][2] = 4;
+    A.matrix[1][3] = -6;
+    A.matrix[1][4] = 1;
+    A.matrix[2][0] = 2;
+    A.matrix[2][1] = -5;
+    A.matrix[2][2] = -7;
+    A.matrix[2][3] = 5;
+    A.matrix[2][4] = 1;
+    A.matrix[3][0] = -4;
+    A.matrix[3][1] = 3;
+    A.matrix[3][2] = 5;
+    A.matrix[3][3] = -6;
+    A.matrix[3][4] = 2;
+    A.matrix[4][0] = 1;
+    A.matrix[4][1] = -1;
+    A.matrix[4][2] = 1;
+    A.matrix[4][3] = -1;
+    A.matrix[4][4] = 1;
+    s21_determinant(&A, &result);
+    ck_assert_int_eq(178, result);
+    s21_remove_matrix(&A);
+}
+
+START_TEST(test_22)
+{
+    // Определитель матрицы 2
+    matrix_t A;
+    double result;
+    s21_create_matrix(6, 6, &A);
+    A.matrix[0][0] = 0;
+    A.matrix[0][1] = -3;
+    A.matrix[0][2] = -5;
+    A.matrix[0][3] = 8;
+    A.matrix[0][4] = 1;
+    A.matrix[0][5] = 5;
+    A.matrix[1][0] = -3;
+    A.matrix[1][1] = 2;
+    A.matrix[1][2] = 4;
+    A.matrix[1][3] = 0;
+    A.matrix[1][4] = 1;
+    A.matrix[1][5] = 4;
+    A.matrix[2][0] = 2;
+    A.matrix[2][1] = -5;
+    A.matrix[2][2] = -10;
+    A.matrix[2][3] = 5;
+    A.matrix[2][4] = 1;
+    A.matrix[2][5] = -3;
+    A.matrix[3][0] = 2;
+    A.matrix[3][1] = 3;
+    A.matrix[3][2] = 5;
+    A.matrix[3][3] = -6;
+    A.matrix[3][4] = 2;
+    A.matrix[3][5] = 10;
+    A.matrix[4][0] = 2;
+    A.matrix[4][1] = -10;
+    A.matrix[4][2] = 6;
+    A.matrix[4][3] = -5;
+    A.matrix[4][4] = 1;
+    A.matrix[4][5] = 2;
+    A.matrix[5][0] = 1;
+    A.matrix[5][1] = -1;
+    A.matrix[5][2] = 0;
+    A.matrix[5][3] = 4;
+    A.matrix[5][4] = -1;
+    A.matrix[5][5] = -2;
+    s21_determinant(&A, &result);
+    ck_assert_int_eq(-31693, result);
+    s21_remove_matrix(&A);
+}
+
+START_TEST(test_23)
+{
+    // Обратная матрица 1
+    matrix_t A, B, RESULT;
+    s21_create_matrix(2, 2, &A);
+    s21_create_matrix(2, 2, &RESULT);
+    A.matrix[0][0] = 1;
+    A.matrix[0][1] = 2;
+    A.matrix[1][0] = 3;
+    A.matrix[1][1] = 4;
+    s21_create_matrix(2, 2, &B);
+    B.matrix[0][0] = -2;
+    B.matrix[0][1] = 1;
+    B.matrix[1][0] = 1.5;
+    B.matrix[1][1] = -0.5;
+    s21_inverse_matrix(&A, &RESULT);
+    ck_assert_int_eq(1, s21_eq_matrix(&RESULT, &B));
+    s21_remove_matrix(&A);
+    s21_remove_matrix(&B);
+    s21_remove_matrix(&RESULT);
+}
+
+START_TEST(test_24)
+{
+    // Обратная матрица 2
+    matrix_t A, B, RESULT;
+    s21_create_matrix(3, 3, &A);
+    s21_create_matrix(3, 3, &RESULT);
+    A.matrix[0][0] = 2;
+    A.matrix[0][1] = 5;
+    A.matrix[0][2] = 7;
+    A.matrix[1][0] = 6;
+    A.matrix[1][1] = 3;
+    A.matrix[1][2] = 4;
+    A.matrix[2][0] = 5;
+    A.matrix[2][1] = -2;
+    A.matrix[2][2] = -3;
+    s21_create_matrix(3, 3, &B);
+    B.matrix[0][0] = 1;
+    B.matrix[0][1] = -1;
+    B.matrix[0][2] = 1;
+    B.matrix[1][0] = -38;
+    B.matrix[1][1] = 41;
+    B.matrix[1][2] = -34;
+    B.matrix[2][0] = 27;
+    B.matrix[2][1] = -29;
+    B.matrix[2][2] = 24;
+    s21_inverse_matrix(&A, &RESULT);
+    ck_assert_int_eq(1, s21_eq_matrix(&RESULT, &B));
+    s21_remove_matrix(&A);
+    s21_remove_matrix(&B);
+    s21_remove_matrix(&RESULT);
+}
+
+START_TEST(test_25)
+{
+    // Созадние матрицы 0 х 0
+    int x = 1;
+    matrix_t A;
+    int ret = s21_create_matrix(0, 0, &A);
+    ck_assert_int_eq(x, ret);
+    s21_remove_matrix(&A);
+}
+
+START_TEST(test_26)
+{
+    // Матрица NULL
+    matrix_t A, B, RES;
+    s21_create_matrix(2, 2, &A);
+    A.matrix = NULL;
+    s21_create_matrix(2, 2, &B);
+    B.matrix[0][0] = 1;
+    B.matrix[0][1] = 2;
+    B.matrix[1][0] = 3;
+    B.matrix[1][1] = 4;
+    int ret = s21_sum_matrix(&A, &B, &RES);
+    ck_assert_int_eq(1, ret);
+    ret = s21_sub_matrix(&A, &B, &RES);
+    ck_assert_int_eq(1, ret);
+    ret = s21_mult_number(&A, 5, &RES);
+    ck_assert_int_eq(1, ret);
+    ret = s21_mult_matrix(&A, &B, &RES);
+    ck_assert_int_eq(1, ret);
+    ret = s21_transpose(&A, &RES);
+    ck_assert_int_eq(1, ret);
+    ret = s21_calc_complements(&A, &RES);
+    ck_assert_int_eq(1, ret);
+    double x;
+    ret = s21_determinant(&A, &x);
+    ck_assert_int_eq(1, ret);
+    ret = s21_inverse_matrix(&A, &RES);
+    ck_assert_int_eq(1, ret);
+    s21_remove_matrix(&A);
+    s21_remove_matrix(&B);
 }
 
 Suite *suite_matrix(void)
@@ -547,6 +726,12 @@ Suite *suite_matrix(void)
     tcase_add_test(tcase_core, test_18);
     tcase_add_test(tcase_core, test_19);
     tcase_add_test(tcase_core, test_20);
+    tcase_add_test(tcase_core, test_21);
+    tcase_add_test(tcase_core, test_22);
+    tcase_add_test(tcase_core, test_23);
+    tcase_add_test(tcase_core, test_24);
+    tcase_add_test(tcase_core, test_25);
+    tcase_add_test(tcase_core, test_26);
 
     suite_add_tcase(suite, tcase_core);
     return suite;

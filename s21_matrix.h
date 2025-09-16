@@ -18,6 +18,12 @@ typedef enum s21_result
     S21_MATRIX_ERROR = 2,
 } result;
 
+typedef enum s21_row_or_col
+{
+    S21_ROW = 0,
+    S21_COL = 1,
+} row_or_col;
+
 // Создание матриц (create_matrix)
 int s21_create_matrix(int rows, int columns, matrix_t *result);
 // Очистка матриц (remove_matrix)
@@ -45,5 +51,9 @@ void s21_zero_matrix(int rows, int columns, matrix_t *A);
 void s21_matrix_for_det(int not_use_i, int not_use_j, matrix_t *A, matrix_t *A_det);
 void s21_free_mem_matrix(matrix_t *matrix);
 void s21_minor(matrix_t *A, double *result);
+void s21_del_row(matrix_t *A, matrix_t *RESULT, int x);
+void s21_del_col(matrix_t *A, matrix_t *RESULT, int x);
+double s21_determ_rec(matrix_t *A);
+void s21_copy_matrix(matrix_t *A, matrix_t *B);
 
 #endif // S21_MATRIX_H

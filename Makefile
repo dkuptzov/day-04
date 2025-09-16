@@ -36,7 +36,7 @@ test: s21_matrix.a
 	./$@
 
 gcov_report: clean
-	$(CC) $(CFLAGS) --coverage ./tests/*.c ./*.c $(TEST_FLAGS) -o gcov_test
+	$(CC) $(CFLAGS) $(LDFLAGS) --coverage ./tests/*.c ./*.c $(TEST_FLAGS) -o gcov_test
 	./gcov_test
 	lcov -t "gcov_test" -c -d . -o gcov_test.info
 	genhtml -o report gcov_test.info

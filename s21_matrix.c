@@ -22,22 +22,30 @@ int s21_create_matrix(int rows, int columns, matrix_t *result)
 {
     int ret = S21_MATRIX_OK;
     double **matrix = NULL;
-    if ((rows < 0 || columns < 0) || !result)
+    if ((rows <= 0 || columns <= 0) || !result)
+    {
         ret = S21_MATRIX_WRONG;
+        result->matrix = NULL;
+    }
     else
     {
         matrix = (double **)calloc(rows, sizeof(double *));
-        for (int i = 0; i < rows && ret == S21_MATRIX_OK; i++)
+        if (matrix != NULL)
         {
-            matrix[i] = (double *)calloc(columns, sizeof(double));
-            if (matrix[i] == NULL)
+            for (int i = 0; i < rows && ret == S21_MATRIX_OK; i++)
             {
-                for (int j = 0; j < i; j++)
-                    free(matrix[j]);
-                free(matrix);
-                ret = S21_MATRIX_ERROR;
+                matrix[i] = (double *)calloc(columns, sizeof(double));
+                if (matrix[i] == NULL)
+                {
+                    for (int j = 0; j < i; j++)
+                        free(matrix[j]);
+                    free(matrix);
+                    ret = S21_MATRIX_ERROR;
+                }
             }
         }
+        else
+            ret = S21_MATRIX_WRONG;
     }
     if (ret == S21_MATRIX_OK)
     {
@@ -51,17 +59,26 @@ int s21_create_matrix(int rows, int columns, matrix_t *result)
 // Очистка матриц (remove_matrix)
 void s21_remove_matrix(matrix_t *A)
 {
+    // if (A == NULL)
+    //     return;
+    // if (A->matrix != NULL && A->rows > 0)
+    // {
+    //     for (int i = 0; i < A->rows; i++)
+    //         free(A->matrix[i]);
+    //     free(A->matrix);
+    //     A->matrix = NULL;
+    // }
+    // A->rows = 0;
+    // A->columns = 0;
     if (A != NULL && A->matrix != NULL)
     {
         for (int i = 0; i < A->rows; i++)
-        {
             free(A->matrix[i]);
-        }
         free(A->matrix);
-        A->matrix = NULL;
-        A->rows = 0;
-        A->columns = 0;
     }
+    A->matrix = NULL;
+    A->rows = 0;
+    A->columns = 0;
 }
 
 // Сравнение матриц (eq_matrix)
@@ -73,12 +90,12 @@ int s21_eq_matrix(matrix_t *A, matrix_t *B)
     Сравнение должно происходить вплоть до шестого знака после запятой включительно.
     */
     char str_A[128], str_B[128];
-    int ret = S21_MATRIX_OK, is_equal = 0;
-    if (A == NULL || B == NULL || A->matrix == NULL || B->matrix == NULL)
-        ret = S21_MATRIX_WRONG;
-    else if (A->columns != B->columns || A->rows != B->rows)
-        ret = S21_MATRIX_ERROR;
-    for (int i = 0; i < A->rows && ret == S21_MATRIX_OK && is_equal == 0; i++)
+    int ret = SUCCESS, is_equal = 0;
+    if (A == NULL || B == NULL || A->matrix == NULL || B->matrix == NULL || A->rows <= 0 || A->columns <= 0 || B->rows <= 0 || B->columns <= 0)
+        ret = FAILURE;
+    if (A->columns != B->columns || A->rows != B->rows)
+        ret = FAILURE;
+    for (int i = 0; i < A->rows && ret == SUCCESS && is_equal == 0; i++)
     {
         for (int j = 0; j < A->columns; j++)
         {
@@ -90,10 +107,8 @@ int s21_eq_matrix(matrix_t *A, matrix_t *B)
             memset(str_B, 0, 128);
         }
     }
-    if (is_equal && ret == S21_MATRIX_OK)
+    if (is_equal)
         ret = FAILURE;
-    else if (ret == S21_MATRIX_OK)
-        ret = SUCCESS;
     return ret;
 }
 
@@ -105,18 +120,20 @@ int s21_sum_matrix(matrix_t *A, matrix_t *B, matrix_t *result)
     элементы которой определяются равенствами C(i,j) = A(i,j) + B(i,j).
     */
     int ret = S21_MATRIX_OK;
-    if (A == NULL || B == NULL || A->matrix == NULL || B->matrix == NULL)
+    if (A == NULL || B == NULL || A->matrix == NULL || B->matrix == NULL || result == NULL)
         ret = S21_MATRIX_WRONG;
     else if (A->columns != B->columns || A->rows != B->rows)
         ret = S21_MATRIX_ERROR;
+    if (ret == S21_MATRIX_OK)
+        ret = s21_create_matrix(A->rows, A->columns, result);
     for (int i = 0; i < A->rows && ret == S21_MATRIX_OK; i++)
     {
-        for (int j = 0; j < A->columns && ret == S21_MATRIX_OK; j++)
+        for (int j = 0; j < A->columns; j++)
         {
-            if (DBL_MAX > fabs(A->matrix[i][j] + B->matrix[i][j]) && DBL_MIN < fabs(A->matrix[i][j] + B->matrix[i][j]))
-                result->matrix[i][j] = A->matrix[i][j] + B->matrix[i][j];
-            else
-                ret = S21_MATRIX_ERROR;
+            // if (DBL_MAX > fabs(A->matrix[i][j] + B->matrix[i][j]) && DBL_MIN < fabs(A->matrix[i][j] + B->matrix[i][j]))
+            result->matrix[i][j] = A->matrix[i][j] + B->matrix[i][j];
+            // else
+            //     ret = S21_MATRIX_ERROR;
         }
     }
     return ret;
@@ -130,19 +147,16 @@ int s21_sub_matrix(matrix_t *A, matrix_t *B, matrix_t *result)
     элементы которой определяются равенствами C(i,j) = A(i,j) - B(i,j).
     */
     int ret = S21_MATRIX_OK;
-    if (A == NULL || B == NULL || A->matrix == NULL || B->matrix == NULL)
+    if (A == NULL || B == NULL || A->matrix == NULL || B->matrix == NULL || result == NULL)
         ret = S21_MATRIX_WRONG;
     else if (A->columns != B->columns || A->rows != B->rows)
         ret = S21_MATRIX_ERROR;
+    if (ret == S21_MATRIX_OK)
+        ret = s21_create_matrix(A->rows, A->columns, result);
     for (int i = 0; i < A->rows && ret == S21_MATRIX_OK; i++)
     {
-        for (int j = 0; j < A->columns && ret == S21_MATRIX_OK; j++)
-        {
-            if (DBL_MAX > fabs(A->matrix[i][j] - B->matrix[i][j]) && DBL_MIN < fabs(A->matrix[i][j] - B->matrix[i][j]))
-                result->matrix[i][j] = A->matrix[i][j] - B->matrix[i][j];
-            else
-                ret = S21_MATRIX_ERROR;
-        }
+        for (int j = 0; j < A->columns; j++)
+            result->matrix[i][j] = A->matrix[i][j] - B->matrix[i][j];
     }
     return ret;
 }
@@ -155,17 +169,14 @@ int s21_mult_number(matrix_t *A, double number, matrix_t *result)
     элементы которой определяются равенствами B = λ × A(i,j).
     */
     int ret = S21_MATRIX_OK;
-    if (A == NULL || A->matrix == NULL)
+    if (A == NULL || A->matrix == NULL || result == NULL)
         ret = S21_MATRIX_WRONG;
+    if (ret == S21_MATRIX_OK)
+        ret = s21_create_matrix(A->rows, A->columns, result);
     for (int i = 0; i < A->rows && ret == S21_MATRIX_OK; i++)
     {
-        for (int j = 0; j < A->columns && ret == S21_MATRIX_OK; j++)
-        {
-            if (DBL_MAX > fabs(A->matrix[i][j] * number) && DBL_MIN < fabs(A->matrix[i][j] * number))
-                result->matrix[i][j] = A->matrix[i][j] * number;
-            else
-                ret = S21_MATRIX_ERROR;
-        }
+        for (int j = 0; j < A->columns; j++)
+            result->matrix[i][j] = A->matrix[i][j] * number;
     }
     return ret;
 }
@@ -178,29 +189,20 @@ int s21_mult_matrix(matrix_t *A, matrix_t *B, matrix_t *result)
     элементы которой определяются равенством C(i,j) = A(i,1) × B(1,j) + A(i,2) × B(2,j) + … + A(i,k) × B(k,j).
     */
     int ret = S21_MATRIX_OK;
-    if (A == NULL || B == NULL || A->matrix == NULL || B->matrix == NULL)
+    if (A == NULL || B == NULL || A->matrix == NULL || B->matrix == NULL || result == NULL)
         ret = S21_MATRIX_WRONG;
-    else if (A->columns != B->rows || A->rows != B->columns)
+    else if (A->columns != B->rows)
         ret = S21_MATRIX_ERROR;
     if (ret == S21_MATRIX_OK)
-        s21_zero_matrix(A->rows, B->columns, result);
+        ret = s21_create_matrix(A->rows, B->columns, result);
     for (int i = 0; i < A->rows && ret == S21_MATRIX_OK; i++)
     {
-        for (int j = 0; j < B->columns && ret == S21_MATRIX_OK; j++)
+        for (int j = 0; j < B->columns; j++)
         {
             for (int k = 0; k < A->columns; k++)
-            {
                 result->matrix[i][j] += (A->matrix[i][k] * B->matrix[k][j]);
-                // printf("i: %d, j: %d, k: %d\n", i, j, k);
-                // printf("%lf %lf %lf\n", A->matrix[i][k], B->matrix[k][j], result->matrix[i][j]);
-                // int a;
-                // scanf("%d", &a);
-            }
         }
     }
-    // for (int i = 0; i < 4 && ret == S21_MATRIX_OK; i++)
-    //     for (int j = 0; j < 4 && ret == S21_MATRIX_OK; j++)
-    //         printf("%lf ", result->matrix[i][j]);
     return ret;
 }
 
@@ -211,14 +213,14 @@ int s21_transpose(matrix_t *A, matrix_t *result)
     Транспонирование матрицы А заключается в замене строк этой матрицы ее столбцами с сохранением их номеров.
     */
     int ret = S21_MATRIX_OK;
-    if (A == NULL || A->matrix == NULL || A->rows != result->columns || A->columns != result->rows)
+    if (A == NULL || A->matrix == NULL || result == NULL)
         ret = S21_MATRIX_WRONG;
+    if (ret == S21_MATRIX_OK)
+        ret = s21_create_matrix(A->columns, A->rows, result);
     for (int i = 0; i < A->rows && ret == S21_MATRIX_OK; i++)
     {
-        for (int j = 0; j < A->columns && ret == S21_MATRIX_OK; j++)
-        {
+        for (int j = 0; j < A->columns; j++)
             result->matrix[j][i] = A->matrix[i][j];
-        }
     }
     return ret;
 }
@@ -229,54 +231,123 @@ int s21_calc_complements(matrix_t *A, matrix_t *result)
     /*
     Минором M(i,j) называется определитель (n-1)-го порядка, полученный вычёркиванием из матрицы A i-й строки и j-го столбца.
     */
-    result = 0;
-    double det = 0;
     int ret = S21_MATRIX_OK;
-    if (A == NULL || A->matrix == NULL)
+    if (A == NULL || A->matrix == NULL || result == NULL || A->rows <= 0 || A->columns <= 0)
         ret = S21_MATRIX_WRONG;
-    for (int i = 0; i < A->rows && ret == S21_MATRIX_OK; i++)
+    if (A->rows != A->columns)
+        ret = S21_MATRIX_ERROR;
+    if (ret == S21_MATRIX_OK)
+        ret = s21_create_matrix(A->rows, A->columns, result);
+    if (ret == S21_MATRIX_OK)
     {
-        for (int j = 0; j < A->columns && ret == S21_MATRIX_OK; j++)
+        if (A->rows == 1)
+            result->matrix[0][0] = 1;
+        else if (A->rows == 2)
         {
-            matrix_t A_det;
-            s21_create_matrix(A->rows - 1, A->columns - 1, &A_det);
-            s21_matrix_for_det(i, j, A, &A_det);
-            // for (int i = 0; i < A_det.rows; i++)
-            // {
-            //     for (int j = 0; j < A_det.columns; j++)
-            //         printf("%lf", A_det.matrix[i][j]);
-            //     printf("\n");
-            // }
-            s21_minor(&A_det, &det);
-            printf("%lf\n", det);
-            int a;
-            scanf("%d", &a);
-            s21_free_mem_matrix(&A_det);
+            result->matrix[0][0] = A->matrix[1][1];
+            result->matrix[0][1] = (A->matrix[1][0] * -1);
+            result->matrix[1][0] = (A->matrix[0][1] * -1);
+            result->matrix[1][1] = A->matrix[0][0];
+        }
+        else
+        {
+            for (int i = 0; i < A->rows && ret == S21_MATRIX_OK; i++)
+            {
+                for (int j = 0; j < A->columns && ret == S21_MATRIX_OK; j++)
+                {
+                    matrix_t A_det;
+                    ret = s21_create_matrix(A->rows - 1, A->columns - 1, &A_det);
+                    if (ret == S21_MATRIX_OK)
+                    {
+                        s21_matrix_for_det(i, j, A, &A_det);
+                        double x = s21_determ_rec(&A_det);
+                        if ((i + j) % 2 != 0) // матрица алгебраических дополнений
+                            x *= -1;
+                        result->matrix[i][j] = x;
+                        // s21_free_mem_matrix(&A_det);
+                        s21_remove_matrix(&A_det);
+                    }
+                }
+            }
         }
     }
-    // удалить потом
-    result->columns++;
-    // удалить потом
-    return 0;
+    // s21_remove_matrix(result);
+    return ret;
 }
 
 // Определитель матрицы (determinant)
-// int s21_determinant(matrix_t *A, double *result)
-// {
-//     /*
-//     Определитель (детерминант) — это число, которое ставят в соответствие каждой квадратной матрице
-//     и вычисляют из элементов по специальным формулам.
-//     Tip: определитель может быть вычислен только для квадратной матрицы.
-//     Определитель матрицы равен сумме произведений элементов строки (столбца) на соответствующие алгебраические дополнения.
-//     */
-// }
+int s21_determinant(matrix_t *A, double *result)
+{
+    /*
+    Определитель (детерминант) — это число, которое ставят в соответствие каждой квадратной матрице
+    и вычисляют из элементов по специальным формулам.
+    Tip: определитель может быть вычислен только для квадратной матрицы.
+    Определитель матрицы равен сумме произведений элементов строки (столбца) на соответствующие алгебраические дополнения.
+    */
+    int ret = S21_MATRIX_OK;
+    if (A == NULL || A->matrix == NULL || result == NULL || A->rows <= 0 || A->columns <= 0)
+        ret = S21_MATRIX_WRONG;
+    if (A->rows != A->columns)
+        ret = S21_MATRIX_ERROR;
+    if (ret == S21_MATRIX_OK)
+        *result = s21_determ_rec(A);
+    return ret;
+}
 
-// // Обратная матрица (inverse_matrix)
-// int s21_inverse_matrix(matrix_t *A, matrix_t *result)
-// {
-//     /*
-//     Матрицу A в степени -1 называют обратной к квадратной матрице А,
-//     если произведение этих матриц равняется единичной матрице.
-//     Обратной матрицы не существует, если определитель равен 0.
-//     */
-// }
+// Обратная матрица (inverse_matrix)
+int s21_inverse_matrix(matrix_t *A, matrix_t *result)
+{
+    /*
+    Матрицу A в степени -1 называют обратной к квадратной матрице А,
+    если произведение этих матриц равняется единичной матрице.
+    Обратной матрицы не существует, если определитель равен 0.
+    */
+    double res;
+    int ret = S21_MATRIX_OK;
+    if (A == NULL || A->matrix == NULL || result == NULL || A->rows <= 0 || A->columns <= 0)
+        ret = S21_MATRIX_WRONG;
+    if (A->rows != A->columns)
+        ret = S21_MATRIX_ERROR;
+    if (ret == S21_MATRIX_OK)
+        ret = s21_create_matrix(A->rows, A->columns, result);
+    if (ret == S21_MATRIX_OK && A->rows == 1)
+        result->matrix[0][0] = 1 / A->matrix[0][0];
+    else if (ret == S21_MATRIX_OK)
+    {
+        // matrix_t A_minor, A_transponse;
+        // s21_create_matrix(A->rows, A->columns, &A_minor);
+        // s21_create_matrix(A->rows, A->columns, &A_transponse);
+        // double res;
+        s21_determinant(A, &res);
+        // printf("res: %2.0lf\n", res);
+        if (res == 0)
+            ret = S21_MATRIX_ERROR;
+        // }
+        // if (ret == S21_MATRIX_OK)
+        // {
+        else
+        {
+            matrix_t A_minor, A_transponse;
+            // s21_create_matrix(A->rows, A->columns, &A_minor);
+            s21_calc_complements(A, &A_minor);
+            s21_transpose(&A_minor, &A_transponse);
+            for (int i = 0; i < result->rows; i++)
+            {
+                for (int j = 0; j < result->columns; j++)
+                {
+                    result->matrix[i][j] = A_transponse.matrix[i][j] * (1 / res);
+                }
+            }
+            s21_remove_matrix(&A_minor);
+            s21_remove_matrix(&A_transponse);
+        }
+        // s21_free_mem_matrix(&A_minor);
+        // s21_free_mem_matrix(&A_transponse);
+        // s21_remove_matrix(&A_minor);
+        // s21_remove_matrix(&A_transponse);
+    }
+    // *result = A_transponse;
+    // s21_free_mem_matrix(&A_minor);
+    // s21_free_mem_matrix(&A_transponse);
+    return ret;
+}
